@@ -28,13 +28,14 @@ FindDonorsAI combines a rigorously trained ML model with a premium dark-themed w
 
 ## Model Performance
 
+
 | Metric    | Score  |
 |-----------|--------|
-| Accuracy  | 85.4%  |
-| Precision | 71.0%  |
-| Recall    | 72.0%  |
-| F1 Score  | 71.5%  |
-| F-beta    | 71.2%  |
+| Accuracy  | 86.4%  |
+| Precision | 74.7%  |
+| Recall    | 70.5%  |
+| F1 Score  | 72.5%  |
+| F-beta    | 73.8%  |
 
 **Best Hyperparameters**: `depth=7, iterations=300, learning_rate=0.1`
 
