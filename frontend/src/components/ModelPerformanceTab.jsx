@@ -1,11 +1,14 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
+import { useThemeColors } from "../hooks/useThemeColors";
 
 /**
- * ModelPerformanceTab — Metrics cards with D3 bar chart.
+ * ModelPerformanceTab — Metric cards grid with D3 bar chart.
+ * Dashboard design system: metrics grid, glass panels, 8pt spacing.
  */
 export default function ModelPerformanceTab({ metrics }) {
   const chartRef = useRef(null);
+  const colors = useThemeColors();
 
   useEffect(() => {
     if (!metrics || !chartRef.current) return;
@@ -14,22 +17,24 @@ export default function ModelPerformanceTab({ metrics }) {
     d3.select(container).selectAll("*").remove();
 
     const metricList = [
-      { name: "Accuracy", value: metrics.accuracy, color: "#6366f1" },
-      { name: "Precision", value: metrics.precision, color: "#8b5cf6" },
-      { name: "Recall", value: metrics.recall, color: "#06b6d4" },
-      { name: "F1 Score", value: metrics.f1_score, color: "#10b981" },
+      { name: "Accuracy", value: metrics.accuracy, color: "#0C5CAB" },
+      { name: "Precision", value: metrics.precision, color: "#0a4a8a" },
+      { name: "Recall", value: metrics.recall, color: "#10b981" },
+      { name: "F1 Score", value: metrics.f1_score, color: "#1d8cf8" },
       { name: "F-beta", value: metrics.fbeta_score, color: "#f59e0b" },
     ];
 
     const margin = { top: 20, right: 30, bottom: 50, left: 60 };
     const width = 520 - margin.left - margin.right;
-    const height = 320 - margin.top - margin.bottom;
+    const height = 300 - margin.top - margin.bottom;
 
     const svg = d3
       .select(container)
       .append("svg")
       .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
       .attr("preserveAspectRatio", "xMidYMid meet")
+      .attr("role", "img")
+      .attr("aria-label", "Model performance bar chart")
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
@@ -52,7 +57,7 @@ export default function ModelPerformanceTab({ metrics }) {
       .attr("x2", width)
       .attr("y1", (d) => y(d))
       .attr("y2", (d) => y(d))
-      .attr("stroke", "rgba(148, 163, 184, 0.15)")
+      .attr("stroke", colors.borderSubtle)
       .attr("stroke-dasharray", "3,3");
 
     // Bars
@@ -65,7 +70,7 @@ export default function ModelPerformanceTab({ metrics }) {
       .attr("width", x.bandwidth())
       .attr("y", height)
       .attr("height", 0)
-      .attr("rx", 6)
+      .attr("rx", 4)
       .attr("fill", (d) => d.color)
       .style("cursor", "pointer")
       .transition()
@@ -78,7 +83,7 @@ export default function ModelPerformanceTab({ metrics }) {
     svg
       .selectAll("rect")
       .on("mouseenter", function () {
-        d3.select(this).transition().duration(150).attr("opacity", 0.8);
+        d3.select(this).transition().duration(150).attr("opacity", 0.75);
       })
       .on("mouseleave", function () {
         d3.select(this).transition().duration(150).attr("opacity", 1);
@@ -94,9 +99,10 @@ export default function ModelPerformanceTab({ metrics }) {
       .attr("x", (d) => x(d.name) + x.bandwidth() / 2)
       .attr("y", (d) => y(d.value) - 8)
       .attr("text-anchor", "middle")
-      .attr("fill", "#e2e8f0")
-      .attr("font-size", "12px")
-      .attr("font-weight", "600")
+      .attr("fill", colors.textPrimary)
+      .attr("font-size", "11px")
+      .attr("font-weight", "700")
+      .attr("font-family", "IBM Plex Sans, sans-serif")
       .text((d) => (d.value * 100).toFixed(1) + "%")
       .style("opacity", 0)
       .transition()
@@ -110,50 +116,58 @@ export default function ModelPerformanceTab({ metrics }) {
       .attr("transform", `translate(0, ${height})`)
       .call(d3.axisBottom(x))
       .selectAll("text")
-      .attr("fill", "#94a3b8")
-      .attr("font-size", "11px");
+      .attr("fill", colors.textMuted)
+      .attr("font-size", "11px")
+      .attr("font-family", "IBM Plex Sans, sans-serif");
 
-    svg.selectAll(".domain, .tick line").attr("stroke", "rgba(148,163,184,0.3)");
+    svg.selectAll(".domain, .tick line").attr("stroke", colors.borderSubtle);
 
     // Y axis
     svg
       .append("g")
       .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format(".0%")))
       .selectAll("text")
-      .attr("fill", "#94a3b8")
-      .attr("font-size", "11px");
+      .attr("fill", colors.textMuted)
+      .attr("font-size", "11px")
+      .attr("font-family", "IBM Plex Sans, sans-serif");
 
     return () => d3.select(container).selectAll("*").remove();
-  }, [metrics]);
+  }, [metrics, colors]);
 
   if (!metrics) return null;
 
   const cards = [
-    { label: "Accuracy", value: metrics.accuracy, icon: "\uD83C\uDFAF", color: "#6366f1" },
-    { label: "Precision", value: metrics.precision, icon: "\u2705", color: "#8b5cf6" },
-    { label: "Recall", value: metrics.recall, icon: "\uD83D\uDD0D", color: "#06b6d4" },
-    { label: "F1 Score", value: metrics.f1_score, icon: "\u26A1", color: "#10b981" },
-    { label: "F-beta (0.5)", value: metrics.fbeta_score, icon: "\uD83D\uDCD0", color: "#f59e0b" },
+    { label: "Accuracy",  value: metrics.accuracy,    icon: "🎯", color: "#0C5CAB" },
+    { label: "Precision", value: metrics.precision,   icon: "✅", color: "#0a4a8a" },
+    { label: "Recall",    value: metrics.recall,       icon: "🔍", color: "#10b981" },
+    { label: "F1 Score",  value: metrics.f1_score,    icon: "⚡", color: "#1d8cf8" },
+    { label: "F-beta",    value: metrics.fbeta_score,  icon: "📐", color: "#f59e0b" },
   ];
 
   return (
     <div>
-      <div className="row g-3 mb-4">
-        {cards.map((c) => (
-          <div className="col" key={c.label}>
-            <div className="glass-card p-3 text-center h-100 metric-card">
-              <div className="fs-4 mb-1">{c.icon}</div>
-              <h4 className="mb-1 fw-bold" style={{ color: c.color }}>
-                {(c.value * 100).toFixed(1)}%
-              </h4>
-              <small className="text-muted">{c.label}</small>
+      {/* Metric Cards */}
+      <div className="metrics-grid">
+        {cards.map((c, i) => (
+          <div
+            key={c.label}
+            className={`glass-card glass-card-interactive metric-card animate-in animate-in-delay-${i + 1}`}
+          >
+            <div className="metric-icon" aria-hidden="true">{c.icon}</div>
+            <div className="metric-value" style={{ color: c.color }}>
+              {(c.value * 100).toFixed(1)}%
             </div>
+            <div className="metric-label">{c.label}</div>
           </div>
         ))}
       </div>
-      <div className="glass-card p-4">
-        <h5 className="card-title text-center mb-3">Model Performance Comparison</h5>
-        <div ref={chartRef} className="d-flex justify-content-center"></div>
+
+      {/* Bar Chart */}
+      <div className="glass-card chart-panel animate-in">
+        <div className="chart-panel-header">
+          <h3 className="chart-panel-title">Performance Comparison</h3>
+        </div>
+        <div ref={chartRef} className="chart-container"></div>
       </div>
     </div>
   );

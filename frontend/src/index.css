@@ -1,10 +1,134 @@
-/* Reset default Vite styles */
+/* ============================================
+   DESIGN TOKENS — Dashboard Design System
+   Cloud-platform aesthetic (Heroku/Vercel/GitHub)
+   IBM Plex Sans · 8pt baseline grid
+   ============================================ */
+
 :root {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* — Color tokens — */
+  --color-primary: #0C5CAB;
+  --color-primary-hover: #0a4a8a;
+  --color-primary-glow: rgba(12, 92, 171, 0.35);
+  --color-secondary: #0a4a8a;
+  --color-success: #10b981;
+  --color-success-glow: rgba(16, 185, 129, 0.25);
+  --color-warning: #f59e0b;
+  --color-warning-glow: rgba(245, 158, 11, 0.25);
+  --color-danger: #ef4444;
+  --color-danger-glow: rgba(239, 68, 68, 0.25);
+
+  /* — Surface tokens — */
+  --surface-base: #09090b;
+  --surface-raised: #111114;
+  --surface-overlay: #18181b;
+  --surface-card: rgba(24, 24, 27, 0.75);
+
+  /* — Text tokens — */
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+
+  /* — Border & shadow tokens — */
+  --border-subtle: rgba(161, 161, 170, 0.12);
+  --border-interactive: rgba(12, 92, 171, 0.4);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 24px rgba(12, 92, 171, 0.15);
+
+  /* — Glass tokens — */
+  --glass-bg: rgba(24, 24, 27, 0.6);
+  --glass-border: rgba(161, 161, 170, 0.1);
+  --glass-blur: 20px;
+
+  /* — Typography — */
+  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Fira Code', monospace;
+
+  /* — Spacing (8pt grid) — */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* — Radius tokens — */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* — Transitions — */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* — Typography scale — */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
+
+  font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   LIGHT THEME — Token overrides
+   Same custom properties, light palette
+   ============================================ */
+[data-theme="light"] {
+  /* — Color tokens (primary stays the same for brand consistency) — */
+  --color-primary: #0C5CAB;
+  --color-primary-hover: #094d92;
+  --color-primary-glow: rgba(12, 92, 171, 0.18);
+
+  /* — Surface tokens — */
+  --surface-base: #f4f4f5;
+  --surface-raised: #ffffff;
+  --surface-overlay: #fafafa;
+  --surface-card: rgba(255, 255, 255, 0.85);
+
+  /* — Text tokens — */
+  --text-primary: #18181b;
+  --text-secondary: #52525b;
+  --text-muted: #71717a;
+
+  /* — Border & shadow tokens — */
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-interactive: rgba(12, 92, 171, 0.35);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 20px rgba(12, 92, 171, 0.08);
+
+  /* — Glass tokens — */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --glass-blur: 20px;
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

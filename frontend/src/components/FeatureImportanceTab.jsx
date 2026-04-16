@@ -1,11 +1,14 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
+import { useThemeColors } from "../hooks/useThemeColors";
 
 /**
  * FeatureImportanceTab — Horizontal bar chart of SHAP feature importance.
+ * Dashboard design system: glass panel, gradient bars, IBM Plex Sans.
  */
 export default function FeatureImportanceTab({ importance }) {
   const chartRef = useRef(null);
+  const colors = useThemeColors();
 
   useEffect(() => {
     if (!importance || !chartRef.current) return;
@@ -20,7 +23,7 @@ export default function FeatureImportanceTab({ importance }) {
       value,
     }));
 
-    const margin = { top: 10, right: 40, bottom: 30, left: 200 };
+    const margin = { top: 10, right: 50, bottom: 20, left: 180 };
     const barHeight = 28;
     const height = data.length * barHeight + margin.top + margin.bottom;
     const width = 600;
@@ -30,6 +33,8 @@ export default function FeatureImportanceTab({ importance }) {
       .append("svg")
       .attr("viewBox", `0 0 ${width} ${height}`)
       .attr("preserveAspectRatio", "xMidYMid meet")
+      .attr("role", "img")
+      .attr("aria-label", "SHAP feature importance bar chart")
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
@@ -41,12 +46,12 @@ export default function FeatureImportanceTab({ importance }) {
       .scaleBand()
       .domain(data.map((d) => d.name))
       .range([0, data.length * barHeight])
-      .padding(0.25);
+      .padding(0.3);
 
     const colorScale = d3
       .scaleLinear()
       .domain([0, data.length - 1])
-      .range(["#06b6d4", "#6366f1"]);
+      .range(["#10b981", "#0C5CAB"]);
 
     // Bars
     svg
@@ -58,19 +63,19 @@ export default function FeatureImportanceTab({ importance }) {
       .attr("height", y.bandwidth())
       .attr("x", 0)
       .attr("width", 0)
-      .attr("rx", 4)
+      .attr("rx", 3)
       .attr("fill", (_d, i) => colorScale(i))
       .style("cursor", "pointer")
       .transition()
       .duration(800)
-      .delay((_d, i) => i * 50)
+      .delay((_d, i) => i * 40)
       .attr("width", (d) => x(d.value));
 
     // Hover
     svg
       .selectAll("rect")
       .on("mouseenter", function () {
-        d3.select(this).transition().duration(150).attr("opacity", 0.75);
+        d3.select(this).transition().duration(150).attr("opacity", 0.7);
       })
       .on("mouseleave", function () {
         d3.select(this).transition().duration(150).attr("opacity", 1);
@@ -83,11 +88,13 @@ export default function FeatureImportanceTab({ importance }) {
       .enter()
       .append("text")
       .attr("class", "val")
-      .attr("x", (d) => x(d.value) + 6)
+      .attr("x", (d) => x(d.value) + 8)
       .attr("y", (d) => y(d.name) + y.bandwidth() / 2)
       .attr("dominant-baseline", "central")
-      .attr("fill", "#94a3b8")
-      .attr("font-size", "11px")
+      .attr("fill", colors.textMuted)
+      .attr("font-size", "10px")
+      .attr("font-weight", "500")
+      .attr("font-family", "IBM Plex Mono, monospace")
       .text((d) => d.value.toFixed(4))
       .style("opacity", 0)
       .transition()
@@ -100,20 +107,23 @@ export default function FeatureImportanceTab({ importance }) {
       .append("g")
       .call(d3.axisLeft(y).tickSize(0))
       .selectAll("text")
-      .attr("fill", "#cbd5e1")
-      .attr("font-size", "11px");
+      .attr("fill", colors.textSecondary)
+      .attr("font-size", "11px")
+      .attr("font-family", "IBM Plex Sans, sans-serif");
 
     svg.selectAll(".domain").remove();
 
     return () => d3.select(container).selectAll("*").remove();
-  }, [importance]);
+  }, [importance, colors]);
 
   if (!importance) return null;
 
   return (
-    <div className="glass-card p-4">
-      <h5 className="card-title text-center mb-3">SHAP Feature Importance (Top 15)</h5>
-      <div ref={chartRef} className="d-flex justify-content-center"></div>
+    <div className="glass-card chart-panel animate-in">
+      <div className="chart-panel-header">
+        <h3 className="chart-panel-title">SHAP Feature Importance (Top 15)</h3>
+      </div>
+      <div ref={chartRef} className="chart-container"></div>
     </div>
   );
 }

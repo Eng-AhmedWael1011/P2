@@ -2,16 +2,24 @@ import React from "react";
 
 /**
  * ErrorAlert — Dismissible error alert component.
+ * Uses design tokens for danger state. Accessible close button with 44px target.
  */
 export default function ErrorAlert({ message, onDismiss }) {
   if (!message) return null;
 
   return (
-    <div className="alert alert-danger alert-dismissible fade show d-flex align-items-center shadow-sm" role="alert">
-      <span className="me-2 fs-5">⚠️</span>
-      <span>{message}</span>
+    <div className="error-alert" role="alert">
+      <span className="error-alert-icon" aria-hidden="true">⚠️</span>
+      <span className="error-alert-message">{message}</span>
       {onDismiss && (
-        <button type="button" className="btn-close" onClick={onDismiss} aria-label="Close"></button>
+        <button
+          type="button"
+          className="error-alert-close"
+          onClick={onDismiss}
+          aria-label="Dismiss error"
+        >
+          ✕
+        </button>
       )}
     </div>
   );

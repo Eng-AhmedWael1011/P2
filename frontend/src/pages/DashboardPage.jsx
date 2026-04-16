@@ -8,7 +8,8 @@ import ConfusionMatrixTab from "../components/ConfusionMatrixTab";
 import FeatureImportanceTab from "../components/FeatureImportanceTab";
 
 /**
- * DashboardPage — Main dashboard with tabbed sections.
+ * DashboardPage — Main analytics dashboard with tabbed sections.
+ * Dashboard design system: modular grid layout, tab navigation, glass panels.
  */
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -42,20 +43,20 @@ export default function DashboardPage() {
   };
 
   const tabs = [
-    { id: "overview", label: "Overview", icon: "📊" },
-    { id: "performance", label: "Model Performance", icon: "⚡" },
-    { id: "confusion", label: "Confusion Matrix", icon: "🔢" },
-    { id: "importance", label: "Feature Importance", icon: "🧬" },
+    { id: "overview",    label: "Overview",           icon: "📊" },
+    { id: "performance", label: "Model Performance",  icon: "⚡" },
+    { id: "confusion",   label: "Confusion Matrix",   icon: "🔢" },
+    { id: "importance",  label: "Feature Importance",  icon: "🧬" },
   ];
 
   return (
-    <div className="container py-4">
+    <>
       {/* Page Header */}
-      <div className="text-center mb-4">
+      <div className="page-header">
         <h1 className="page-title">
           <span className="gradient-text">Analytics Dashboard</span>
         </h1>
-        <p className="text-muted">Census Income Prediction Model Insights</p>
+        <p className="page-subtitle">Census Income Prediction Model Insights</p>
       </div>
 
       <ErrorAlert message={error} onDismiss={() => setError(null)} />
@@ -65,23 +66,29 @@ export default function DashboardPage() {
       ) : (
         <>
           {/* Tab Navigation */}
-          <div className="d-flex justify-content-center mb-4">
-            <div className="tab-nav-container">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  className={`tab-btn ${activeTab === tab.id ? "active" : ""}`}
-                  onClick={() => setActiveTab(tab.id)}
-                >
-                  <span className="me-1">{tab.icon}</span>
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+          <div className="tab-nav" role="tablist" aria-label="Dashboard sections">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                className={`tab-btn ${activeTab === tab.id ? "active" : ""}`}
+                onClick={() => setActiveTab(tab.id)}
+                role="tab"
+                aria-selected={activeTab === tab.id}
+                aria-controls={`panel-${tab.id}`}
+                id={`tab-${tab.id}`}
+              >
+                <span className="tab-btn-icon" aria-hidden="true">{tab.icon}</span>
+                {tab.label}
+              </button>
+            ))}
           </div>
 
           {/* Tab Content */}
-          <div className="tab-content-area">
+          <div
+            role="tabpanel"
+            id={`panel-${activeTab}`}
+            aria-labelledby={`tab-${activeTab}`}
+          >
             {activeTab === "overview" && <OverviewTab data={dataSummary} />}
             {activeTab === "performance" && <ModelPerformanceTab metrics={metrics} />}
             {activeTab === "confusion" && <ConfusionMatrixTab metrics={metrics} />}
@@ -89,6 +96,6 @@ export default function DashboardPage() {
           </div>
         </>
       )}
-    </div>
+    </>
   );
 }

@@ -47,6 +47,7 @@ const FIELD_LABELS = {
 
 /**
  * PredictionPage — Interactive form for income prediction.
+ * Dashboard design system: modular grid, glass panels, accessible form inputs.
  */
 export default function PredictionPage() {
   const [form, setForm] = useState({ ...INITIAL_FORM });
@@ -82,131 +83,148 @@ export default function PredictionPage() {
   const numericalFields = ["age", "education-num", "capital-gain", "capital-loss", "hours-per-week"];
   const categoricalFields = Object.keys(CATEGORICAL_OPTIONS);
 
+  const isPositive = result?.prediction === ">50K";
+
   return (
-    <div className="container py-4">
-      <div className="text-center mb-4">
+    <>
+      {/* Page Header */}
+      <div className="page-header">
         <h1 className="page-title">
           <span className="gradient-text">Income Prediction</span>
         </h1>
-        <p className="text-muted">Enter personal details to predict income category</p>
+        <p className="page-subtitle">Enter personal details to predict income category</p>
       </div>
 
-      <div className="row g-4">
-        {/* Form */}
-        <div className="col-lg-7">
-          <div className="glass-card p-4">
-            <h5 className="card-title mb-4">👤 Personal Information</h5>
-            <form onSubmit={handleSubmit}>
-              {/* Numerical Fields */}
-              <div className="row g-3 mb-3">
-                {numericalFields.map((field) => (
-                  <div className="col-md-6" key={field}>
-                    <label className="form-label text-muted small">{FIELD_LABELS[field]}</label>
-                    <input
-                      type="number"
-                      className="form-control form-input"
-                      value={form[field]}
-                      onChange={(e) => handleChange(field, parseFloat(e.target.value) || 0)}
-                      id={`input-${field}`}
-                    />
-                  </div>
-                ))}
-              </div>
-
-              {/* Categorical Fields */}
-              <div className="row g-3 mb-4">
-                {categoricalFields.map((field) => (
-                  <div className="col-md-6" key={field}>
-                    <label className="form-label text-muted small">{FIELD_LABELS[field]}</label>
-                    <select
-                      className="form-select form-input"
-                      value={form[field]}
-                      onChange={(e) => handleChange(field, e.target.value)}
-                      id={`select-${field}`}
-                    >
-                      {CATEGORICAL_OPTIONS[field].map((opt) => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
-                    </select>
-                  </div>
-                ))}
-              </div>
-
-              {/* Buttons */}
-              <div className="d-flex gap-3">
-                <button
-                  type="submit"
-                  className="btn btn-primary-glow flex-grow-1 py-2"
-                  disabled={loading}
-                  id="btn-predict"
-                >
-                  {loading ? (
-                    <>
-                      <span className="spinner-border spinner-border-sm me-2"></span>
-                      Predicting...
-                    </>
-                  ) : (
-                    "🔮 Predict Income"
-                  )}
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary px-4 py-2"
-                  onClick={handleReset}
-                  id="btn-reset"
-                >
-                  Reset
-                </button>
-              </div>
-            </form>
+      <div className="prediction-layout">
+        {/* Form Panel */}
+        <div className="glass-card chart-panel animate-in">
+          <div className="chart-panel-header">
+            <h3 className="chart-panel-title">👤 Personal Information</h3>
           </div>
+
+          <form onSubmit={handleSubmit}>
+            {/* Numerical Fields */}
+            <div className="grid-form" style={{ marginBottom: "var(--space-4)" }}>
+              {numericalFields.map((field) => (
+                <div className="form-group" key={field}>
+                  <label className="form-label" htmlFor={`input-${field}`}>
+                    {FIELD_LABELS[field]}
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control form-input"
+                    value={form[field]}
+                    onChange={(e) => handleChange(field, parseFloat(e.target.value) || 0)}
+                    id={`input-${field}`}
+                    style={{ width: "100%" }}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Categorical Fields */}
+            <div className="grid-form" style={{ marginBottom: "var(--space-6)" }}>
+              {categoricalFields.map((field) => (
+                <div className="form-group" key={field}>
+                  <label className="form-label" htmlFor={`select-${field}`}>
+                    {FIELD_LABELS[field]}
+                  </label>
+                  <select
+                    className="form-select form-input"
+                    value={form[field]}
+                    onChange={(e) => handleChange(field, e.target.value)}
+                    id={`select-${field}`}
+                    style={{ width: "100%" }}
+                  >
+                    {CATEGORICAL_OPTIONS[field].map((opt) => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+
+            {/* Action Buttons */}
+            <div style={{ display: "flex", gap: "var(--space-3)" }}>
+              <button
+                type="submit"
+                className="btn-primary-glow"
+                disabled={loading}
+                id="btn-predict"
+                style={{ flex: 1 }}
+              >
+                {loading ? (
+                  <>
+                    <div className="spinner" style={{ width: 18, height: 18, borderWidth: 2 }} aria-hidden="true"></div>
+                    Predicting...
+                  </>
+                ) : (
+                  "🔮 Predict Income"
+                )}
+              </button>
+              <button
+                type="button"
+                className="btn-outline"
+                onClick={handleReset}
+                id="btn-reset"
+              >
+                Reset
+              </button>
+            </div>
+          </form>
         </div>
 
         {/* Result Panel */}
-        <div className="col-lg-5">
+        <div>
           <ErrorAlert message={error} onDismiss={() => setError(null)} />
 
           {result && (
-            <div className={`glass-card p-4 result-card ${result.prediction === ">50K" ? "result-positive" : "result-negative"}`}>
-              <div className="text-center">
-                <div className="result-icon mb-3">
-                  {result.prediction === ">50K" ? "💰" : "📉"}
+            <div className={`glass-card chart-panel result-card ${isPositive ? "result-positive" : "result-negative"}`}>
+              <div style={{ textAlign: "center" }}>
+                <div className="result-icon" style={{ marginBottom: "var(--space-4)" }} aria-hidden="true">
+                  {isPositive ? "💰" : "📉"}
                 </div>
-                <h3 className="mb-1 fw-bold">
-                  {result.prediction === ">50K" ? "High Income" : "Standard Income"}
+                <h3 style={{ fontWeight: 700, marginBottom: "var(--space-2)", color: "var(--text-primary)" }}>
+                  {isPositive ? "High Income" : "Standard Income"}
                 </h3>
-                <h2 className={`display-5 fw-bold mb-3 ${result.prediction === ">50K" ? "text-accent" : ""}`} style={result.prediction !== ">50K" ? {color: "#6366f1"} : {}}>
-                  {result.prediction}
-                </h2>
-                <div className="glass-card p-3 mt-3" style={{ background: "rgba(255,255,255,0.05)" }}>
-                  <small className="text-muted d-block mb-1">Confidence</small>
-                  <div className="progress mb-2" style={{ height: "8px", borderRadius: "4px", background: "rgba(255,255,255,0.1)" }}>
+                <div style={{ marginBottom: "var(--space-5)" }}>
+                  <span className={`result-badge ${isPositive ? "result-badge-positive" : "result-badge-negative"}`}>
+                    {result.prediction}
+                  </span>
+                </div>
+
+                {/* Confidence */}
+                <div className="glass-card" style={{ padding: "var(--space-5)", background: "rgba(255,255,255,0.03)" }}>
+                  <p style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: "var(--space-3)" }}>
+                    Confidence
+                  </p>
+                  <div className="confidence-bar-track" style={{ marginBottom: "var(--space-3)" }}>
                     <div
-                      className="progress-bar"
-                      style={{
-                        width: `${result.probability * 100}%`,
-                        background: result.prediction === ">50K"
-                          ? "linear-gradient(90deg, #06b6d4, #10b981)"
-                          : "linear-gradient(90deg, #6366f1, #8b5cf6)",
-                        borderRadius: "4px",
-                      }}
+                      className={`confidence-bar-fill ${isPositive ? "confidence-bar-positive" : "confidence-bar-negative"}`}
+                      style={{ width: `${result.probability * 100}%` }}
                     ></div>
                   </div>
-                  <h4 className="mb-0 fw-bold">{(result.probability * 100).toFixed(1)}%</h4>
-                  <small className="text-muted">probability of &gt;50K income</small>
+                  <h4 style={{ fontWeight: 800, color: "var(--text-primary)", fontSize: "var(--text-lg)", marginBottom: "var(--space-1)" }}>
+                    {(result.probability * 100).toFixed(1)}%
+                  </h4>
+                  <p style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)" }}>
+                    probability of &gt;50K income
+                  </p>
                 </div>
               </div>
             </div>
           )}
 
           {!result && !error && (
-            <div className="glass-card p-5 text-center h-100 d-flex flex-column justify-content-center align-items-center">
-              <div style={{ fontSize: "4rem", opacity: 0.3 }}>🔮</div>
-              <p className="text-muted mt-3">Fill in the form and click<br /><strong>Predict Income</strong> to see results</p>
+            <div className="glass-card empty-state">
+              <div className="empty-state-icon" aria-hidden="true">🔮</div>
+              <p className="empty-state-text">
+                Fill in the form and click <strong>Predict Income</strong> to see results
+              </p>
             </div>
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }

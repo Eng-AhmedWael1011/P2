@@ -1,11 +1,14 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
+import { useThemeColors } from "../hooks/useThemeColors";
 
 /**
  * ConfusionMatrixTab — D3 heatmap visualization of the confusion matrix.
+ * Dashboard design system: glass panel, design-token colors, IBM Plex Sans.
  */
 export default function ConfusionMatrixTab({ metrics }) {
   const chartRef = useRef(null);
+  const colors = useThemeColors();
 
   useEffect(() => {
     if (!metrics?.confusion_matrix || !chartRef.current) return;
@@ -16,24 +19,27 @@ export default function ConfusionMatrixTab({ metrics }) {
     const cm = metrics.confusion_matrix;
     const labels = ["\u226450K", ">50K"];
     const margin = { top: 50, right: 30, bottom: 70, left: 80 };
-    const size = 300;
+    const size = 280;
 
     const svg = d3
       .select(container)
       .append("svg")
       .attr("viewBox", `0 0 ${size + margin.left + margin.right} ${size + margin.top + margin.bottom}`)
       .attr("preserveAspectRatio", "xMidYMid meet")
+      .attr("role", "img")
+      .attr("aria-label", "Confusion matrix heatmap")
       .append("g")
       .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    const x = d3.scaleBand().domain(labels).range([0, size]).padding(0.08);
-    const y = d3.scaleBand().domain(labels).range([0, size]).padding(0.08);
+    const x = d3.scaleBand().domain(labels).range([0, size]).padding(0.1);
+    const y = d3.scaleBand().domain(labels).range([0, size]).padding(0.1);
 
     const maxVal = Math.max(...cm.flat());
+    const baseBg = colors.theme === "dark" ? "#18181b" : "#e4e4e7";
     const colorScale = d3
       .scaleSequential()
       .domain([0, maxVal])
-      .interpolator(d3.interpolateRgbBasis(["#1e1b4b", "#4338ca", "#818cf8", "#06b6d4"]));
+      .interpolator(d3.interpolateRgbBasis([baseBg, "#0a4a8a", "#0C5CAB", "#10b981"]));
 
     // Cells
     const cellData = [];
@@ -54,7 +60,7 @@ export default function ConfusionMatrixTab({ metrics }) {
       .attr("height", y.bandwidth())
       .attr("rx", 8)
       .attr("fill", (d) => colorScale(d.value))
-      .attr("stroke", "rgba(255,255,255,0.1)")
+      .attr("stroke", colors.theme === "dark" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)")
       .attr("stroke-width", 1)
       .style("opacity", 0)
       .transition()
@@ -62,7 +68,7 @@ export default function ConfusionMatrixTab({ metrics }) {
       .delay((_d, i) => i * 150)
       .style("opacity", 1);
 
-    // Cell values
+    // Cell values — always white since they sit on colored cells
     svg
       .selectAll("text.cell")
       .data(cellData)
@@ -74,8 +80,9 @@ export default function ConfusionMatrixTab({ metrics }) {
       .attr("text-anchor", "middle")
       .attr("dominant-baseline", "central")
       .attr("fill", "#fff")
-      .attr("font-size", "22px")
-      .attr("font-weight", "700")
+      .attr("font-size", "20px")
+      .attr("font-weight", "800")
+      .attr("font-family", "IBM Plex Sans, sans-serif")
       .text((d) => d.value.toLocaleString())
       .style("opacity", 0)
       .transition()
@@ -89,18 +96,22 @@ export default function ConfusionMatrixTab({ metrics }) {
       .attr("transform", `translate(0, ${size + 5})`)
       .call(d3.axisBottom(x).tickSize(0))
       .selectAll("text")
-      .attr("fill", "#94a3b8")
-      .attr("font-size", "14px")
-      .attr("font-weight", "500");
+      .attr("fill", colors.textMuted)
+      .attr("font-size", "13px")
+      .attr("font-weight", "500")
+      .attr("font-family", "IBM Plex Sans, sans-serif");
 
     svg
       .append("text")
       .attr("x", size / 2)
-      .attr("y", size + 50)
+      .attr("y", size + 48)
       .attr("text-anchor", "middle")
-      .attr("fill", "#94a3b8")
-      .attr("font-size", "13px")
-      .text("Predicted");
+      .attr("fill", colors.textMuted)
+      .attr("font-size", "12px")
+      .attr("font-weight", "600")
+      .attr("font-family", "IBM Plex Sans, sans-serif")
+      .attr("letter-spacing", "0.05em")
+      .text("PREDICTED");
 
     // Y axis
     svg
@@ -108,9 +119,10 @@ export default function ConfusionMatrixTab({ metrics }) {
       .attr("transform", "translate(-5, 0)")
       .call(d3.axisLeft(y).tickSize(0))
       .selectAll("text")
-      .attr("fill", "#94a3b8")
-      .attr("font-size", "14px")
-      .attr("font-weight", "500");
+      .attr("fill", colors.textMuted)
+      .attr("font-size", "13px")
+      .attr("font-weight", "500")
+      .attr("font-family", "IBM Plex Sans, sans-serif");
 
     svg
       .append("text")
@@ -118,24 +130,27 @@ export default function ConfusionMatrixTab({ metrics }) {
       .attr("x", -size / 2)
       .attr("y", -55)
       .attr("text-anchor", "middle")
-      .attr("fill", "#94a3b8")
-      .attr("font-size", "13px")
-      .text("Actual");
+      .attr("fill", colors.textMuted)
+      .attr("font-size", "12px")
+      .attr("font-weight", "600")
+      .attr("font-family", "IBM Plex Sans, sans-serif")
+      .attr("letter-spacing", "0.05em")
+      .text("ACTUAL");
 
     svg.selectAll(".domain").remove();
 
     return () => d3.select(container).selectAll("*").remove();
-  }, [metrics]);
+  }, [metrics, colors]);
 
   if (!metrics?.confusion_matrix) return null;
 
   return (
-    <div className="row justify-content-center">
-      <div className="col-lg-7">
-        <div className="glass-card p-4">
-          <h5 className="card-title text-center mb-3">Confusion Matrix</h5>
-          <div ref={chartRef} className="d-flex justify-content-center"></div>
+    <div style={{ maxWidth: "540px", margin: "0 auto" }}>
+      <div className="glass-card chart-panel animate-in">
+        <div className="chart-panel-header">
+          <h3 className="chart-panel-title">Confusion Matrix</h3>
         </div>
+        <div ref={chartRef} className="chart-container"></div>
       </div>
     </div>
   );
