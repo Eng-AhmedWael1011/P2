@@ -4,6 +4,7 @@ model.py — CatBoost model definition and GridSearchCV configuration.
 
 from catboost import CatBoostClassifier
 from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import make_scorer, fbeta_score
 
 
 def build_model():
@@ -16,9 +17,7 @@ def build_model():
         An unfitted CatBoost model configured with silent output.
     """
     model = CatBoostClassifier(
-        random_seed=42,
         verbose=0,
-        thread_count=-1,
     )
     return model
 
@@ -41,18 +40,17 @@ def build_grid_search(model=None):
         model = build_model()
 
     param_grid = {
-        "iterations": [100, 300, 500],
-        "depth": [2, 4, 6, 7],
-        "learning_rate": [0.03, 0.05, 0.01, 0.001, 0.1],
+        'depth': [2, 4, 6, 8],
+        'learning_rate': [0.01, 0.05, 0.1, 0.001],
+        'iterations': [300, 500, 1000],
     }
+
+    scorer = make_scorer(fbeta_score, beta=0.5)
 
     grid_search = GridSearchCV(
         estimator=model,
         param_grid=param_grid,
-        cv=5,
-        scoring="f1",
-        n_jobs=-1,
-        verbose=1,
-        refit=True,
+        scoring=scorer,
+        n_jobs=8,
     )
     return grid_search

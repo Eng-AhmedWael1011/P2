@@ -48,10 +48,10 @@ def train_pipeline(data_path=None, output_dir=None):
     print("[TRAIN] Preparing features and target...")
     X, y = prepare_data(df)
 
-    # 3. Train/test split (80/20, stratified)
-    print("[TRAIN] Splitting data (80/20, stratified)...")
+    # 3. Train/test split (80/20)
+    print("[TRAIN] Splitting data (80/20)...")
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42, stratify=y
+        X, y, test_size=0.2, random_state=1
     )
 
     # 4. Fit preprocessor on training data
@@ -62,7 +62,7 @@ def train_pipeline(data_path=None, output_dir=None):
 
     # 5. Apply SMOTE on training data ONLY
     print("[TRAIN] Applying SMOTE on training data...")
-    smote = SMOTE(random_state=42)
+    smote = SMOTE(random_state=1)
     X_train_resampled, y_train_resampled = smote.fit_resample(
         X_train_processed, y_train
     )
