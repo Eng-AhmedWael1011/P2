@@ -323,4 +323,5 @@ This project is part of the **DEPI Machine Learning Engineer Program** (Round 4,
 
 ---
 
-*Built with precision by Ahmed Wael*
+*Built with precision by Ahmed Wael and Hazem Amr
+
