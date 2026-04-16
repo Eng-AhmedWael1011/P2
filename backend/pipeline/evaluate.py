@@ -55,6 +55,7 @@ def evaluate_model(model, X_test_processed, y_test, output_dir=None):
     f1 = f1_score(y_test, y_pred)
     fbeta = fbeta_score(y_test, y_pred, beta=0.5)
     cm = confusion_matrix(y_test, y_pred)
+    
 
     metrics = {
         "accuracy": round(float(acc), 4),
