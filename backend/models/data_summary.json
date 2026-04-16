@@ -1,0 +1,159 @@
+{
+  "total_records": 39240,
+  "income_above_50k": 9975,
+  "income_at_most_50k": 29265,
+  "income_above_50k_percent": 25.42,
+  "numerical_stats": {
+    "age": {
+      "mean": 39.31,
+      "median": 38.0,
+      "min": 17.0,
+      "max": 90.0,
+      "std": 13.3
+    },
+    "education-num": {
+      "mean": 10.14,
+      "median": 10.0,
+      "min": 1.0,
+      "max": 16.0,
+      "std": 2.64
+    },
+    "capital-gain": {
+      "mean": 1253.31,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 99999.0,
+      "std": 7994.0
+    },
+    "capital-loss": {
+      "mean": 101.26,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 4356.0,
+      "std": 431.43
+    },
+    "hours-per-week": {
+      "mean": 41.21,
+      "median": 40.0,
+      "min": 1.0,
+      "max": 99.0,
+      "std": 12.46
+    }
+  },
+  "categorical_distributions": {
+    "workclass": {
+      "Private": 27717,
+      "Self-emp-not-inc": 3669,
+      "Local-gov": 2975,
+      "State-gov": 1892,
+      "Self-emp-inc": 1595,
+      "Federal-gov": 1371,
+      "Without-pay": 21
+    },
+    "education_level": {
+      "HS-grad": 12003,
+      "Some-college": 8457,
+      "Bachelors": 6522,
+      "Masters": 2357,
+      "Assoc-voc": 1859,
+      "Assoc-acdm": 1470,
+      "11th": 1422,
+      "10th": 1136,
+      "7th-8th": 801,
+      "Prof-school": 764,
+      "9th": 658,
+      "12th": 540,
+      "Doctorate": 526,
+      "5th-6th": 438,
+      "1st-4th": 217,
+      "Preschool": 70
+    },
+    "marital-status": {
+      "Married-civ-spouse": 17947,
+      "Never-married": 12169,
+      "Divorced": 5885,
+      "Separated": 1394,
+      "Widowed": 1261,
+      "Married-spouse-absent": 552,
+      "Married-AF-spouse": 32
+    },
+    "occupation": {
+      "Prof-specialty": 5516,
+      "Exec-managerial": 5311,
+      "Adm-clerical": 4742,
+      "Sales": 4671,
+      "Craft-repair": 4634,
+      "Other-service": 4252,
+      "Machine-op-inspct": 2440,
+      "Transport-moving": 2032,
+      "Handlers-cleaners": 1712,
+      "Farming-fishing": 1424,
+      "Tech-support": 1325,
+      "Protective-serv": 937,
+      "Priv-house-serv": 230,
+      "Armed-Forces": 14
+    },
+    "relationship": {
+      "Husband": 15645,
+      "Not-in-family": 10530,
+      "Own-child": 5194,
+      "Unmarried": 4547,
+      "Wife": 2004,
+      "Other-relative": 1320
+    },
+    "race": {
+      "White": 33064,
+      "Black": 4089,
+      "Asian-Pac-Islander": 1299,
+      "Amer-Indian-Eskimo": 435,
+      "Other": 353
+    },
+    "sex": {
+      "Male": 26097,
+      "Female": 13143
+    },
+    "native-country": {
+      "United-States": 35340,
+      "Mexico": 879,
+      "Philippines": 281,
+      "Germany": 193,
+      "Puerto-Rico": 175,
+      "Canada": 163,
+      "El-Salvador": 147,
+      "India": 147,
+      "Cuba": 133,
+      "England": 119,
+      "China": 113,
+      "Jamaica": 102,
+      "South": 101,
+      "Italy": 100,
+      "Dominican-Republic": 97,
+      "Japan": 89,
+      "Guatemala": 84,
+      "Vietnam": 83,
+      "Columbia": 82,
+      "Poland": 81,
+      "Haiti": 69,
+      "Portugal": 62,
+      "Iran": 56,
+      "Taiwan": 55,
+      "Greece": 49,
+      "Nicaragua": 48,
+      "Peru": 45,
+      "Ecuador": 43,
+      "France": 36,
+      "Ireland": 35,
+      "Thailand": 29,
+      "Hong": 28,
+      "Trinadad&Tobago": 26,
+      "Cambodia": 26,
+      "Yugoslavia": 23,
+      "Outlying-US(Guam-USVI-etc)": 22,
+      "Laos": 21,
+      "Scotland": 20,
+      "Honduras": 19,
+      "Hungary": 18,
+      "Holand-Netherlands": 1
+    }
+  }
+}
